@@ -1,5 +1,6 @@
 package com.mikhailkarpov.vidly.vidlyapi.web.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.mikhailkarpov.vidly.vidlyapi.domain.entity.Genre;
 import lombok.*;
 
@@ -9,6 +10,7 @@ import lombok.*;
 @Setter
 @EqualsAndHashCode
 @ToString
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class GenreDto {
 
     private Long id;
