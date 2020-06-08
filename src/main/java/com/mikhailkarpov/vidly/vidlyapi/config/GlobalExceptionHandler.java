@@ -1,8 +1,8 @@
 package com.mikhailkarpov.vidly.vidlyapi.config;
 
-import com.mikhailkarpov.vidly.vidlyapi.exception.AccountAlreadyExistsException;
 import com.mikhailkarpov.vidly.vidlyapi.exception.MyBadRequestException;
 import com.mikhailkarpov.vidly.vidlyapi.exception.MyResourceNotFoundException;
+import com.mikhailkarpov.vidly.vidlyapi.exception.UserAlreadyExistsException;
 import com.mikhailkarpov.vidly.vidlyapi.web.dto.ApiErrorDto;
 import com.sun.istack.Nullable;
 import org.springframework.http.HttpHeaders;
@@ -16,7 +16,7 @@ import org.springframework.web.util.WebUtils;
 @ControllerAdvice
 public class GlobalExceptionHandler  {
 
-    @ExceptionHandler({AccountAlreadyExistsException.class, MyResourceNotFoundException.class, MyBadRequestException.class})
+    @ExceptionHandler({UserAlreadyExistsException.class, MyResourceNotFoundException.class, MyBadRequestException.class})
     public ResponseEntity<Object> handleException(Exception e, WebRequest request) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
 
