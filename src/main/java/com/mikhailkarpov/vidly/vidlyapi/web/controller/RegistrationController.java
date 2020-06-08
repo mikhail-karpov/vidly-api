@@ -1,8 +1,9 @@
 package com.mikhailkarpov.vidly.vidlyapi.web.controller;
 
-import com.mikhailkarpov.vidly.vidlyapi.exception.UserAlreadyExistsException;
+import com.mikhailkarpov.vidly.vidlyapi.domain.entity.User;
+import com.mikhailkarpov.vidly.vidlyapi.security.JwtService;
 import com.mikhailkarpov.vidly.vidlyapi.service.UserService;
-import com.mikhailkarpov.vidly.vidlyapi.web.dto.UserDto;
+import com.mikhailkarpov.vidly.vidlyapi.web.dto.AuthenticationResponse;
 import com.mikhailkarpov.vidly.vidlyapi.web.dto.RegistrationRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,9 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class RegistrationController {
 
     private UserService userService;
+    private JwtService jwtService;
 
-    public RegistrationController(UserService userService) {
+    public RegistrationController(UserService userService, JwtService jwtService) {
         this.userService = userService;
+        this.jwtService = jwtService;
     }
 
     @PostMapping
@@ -29,7 +32,11 @@ public class RegistrationController {
         if (!password.equals(matchingPassword))
             return ResponseEntity.badRequest().body("Passwords don't match");
 
-        UserDto user = userService.register(email, password);
-        return ResponseEntity.ok().body(user);
+        userService.register(email, password);
+
+        String jwt = jwtService.generateToken(email);
+        AuthenticationResponse response = new AuthenticationResponse(jwt, email);
+
+        return ResponseEntity.ok().body(response);
     }
 }
