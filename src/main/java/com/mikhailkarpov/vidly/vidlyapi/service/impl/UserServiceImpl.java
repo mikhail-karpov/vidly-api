@@ -10,6 +10,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -33,6 +36,15 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.save(new User(email, encodedPassword));
 
         return UserDto.fromEntity(user);
+    }
+
+    @Override
+    public List<UserDto> findAll() {
+        List<UserDto> users = new ArrayList<>();
+
+        userRepository.findAll().forEach(user -> users.add(UserDto.fromEntity(user)));
+
+        return Collections.unmodifiableList(users);
     }
 
     @Override
