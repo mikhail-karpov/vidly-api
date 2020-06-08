@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("api/accounts")
+@RequestMapping("api/registrations")
 public class RegistrationController {
 
     private UserService userService;
@@ -22,11 +22,14 @@ public class RegistrationController {
 
     @PostMapping
     public ResponseEntity<Object> register(@RequestBody RegistrationRequest request) {
-        try {
-            UserDto account = userService.register(request);
-            return ResponseEntity.ok().body(account);
-        } catch (UserAlreadyExistsException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        String email = request.getEmail();
+        String password = request.getPassword();
+        String matchingPassword = request.getMatchingPassword();
+
+        if (!password.equals(matchingPassword))
+            return ResponseEntity.badRequest().body("Passwords don't match");
+
+        UserDto user = userService.register(email, password);
+        return ResponseEntity.ok().body(user);
     }
 }
