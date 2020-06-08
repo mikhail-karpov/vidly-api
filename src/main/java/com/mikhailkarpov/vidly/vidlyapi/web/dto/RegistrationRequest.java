@@ -3,9 +3,9 @@ package com.mikhailkarpov.vidly.vidlyapi.web.dto;
 import lombok.Data;
 
 @Data
-public class AccountRegistrationRequest {
+public class RegistrationRequest {
 
     private String email;
     private String password;
-    private String name;
+    private String matchingPassword;
 }

@@ -2,8 +2,8 @@ package com.mikhailkarpov.vidly.vidlyapi.web.controller;
 
 import com.mikhailkarpov.vidly.vidlyapi.exception.UserAlreadyExistsException;
 import com.mikhailkarpov.vidly.vidlyapi.service.UserService;
-import com.mikhailkarpov.vidly.vidlyapi.web.dto.AccountDetails;
-import com.mikhailkarpov.vidly.vidlyapi.web.dto.AccountRegistrationRequest;
+import com.mikhailkarpov.vidly.vidlyapi.web.dto.UserDto;
+import com.mikhailkarpov.vidly.vidlyapi.web.dto.RegistrationRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,9 +21,9 @@ public class RegistrationController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> register(@RequestBody AccountRegistrationRequest request) {
+    public ResponseEntity<Object> register(@RequestBody RegistrationRequest request) {
         try {
-            AccountDetails account = userService.register(request);
+            UserDto account = userService.register(request);
             return ResponseEntity.ok().body(account);
         } catch (UserAlreadyExistsException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
