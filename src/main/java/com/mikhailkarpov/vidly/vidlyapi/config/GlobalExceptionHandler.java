@@ -4,6 +4,7 @@ import com.mikhailkarpov.vidly.vidlyapi.exception.MyBadRequestException;
 import com.mikhailkarpov.vidly.vidlyapi.exception.MyResourceNotFoundException;
 import com.mikhailkarpov.vidly.vidlyapi.exception.UserAlreadyExistsException;
 import com.mikhailkarpov.vidly.vidlyapi.web.dto.ApiErrorDto;
+import com.mikhailkarpov.vidly.vidlyapi.web.dto.ValidationConstraintResponse;
 import com.sun.istack.Nullable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -46,7 +47,8 @@ public class GlobalExceptionHandler  {
             }
         });
 
-        return handleExceptionInternal(e, errors, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+        ValidationConstraintResponse response = errors.isEmpty() ? null : new ValidationConstraintResponse(errors);
+        return handleExceptionInternal(e, response, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
     protected ResponseEntity<Object> handleExceptionInternal(

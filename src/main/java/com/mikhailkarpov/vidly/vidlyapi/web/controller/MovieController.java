@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -34,14 +35,14 @@ public class MovieController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> create(@RequestBody MovieDto movieDto) {
+    public ResponseEntity<Object> create(@Valid @RequestBody MovieDto movieDto) {
         log.info("Request for creating new movie: {}", movieDto);
         MovieDto responseBody = movieService.create(movieDto);
         return ResponseEntity.ok(responseBody);
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Object> update(@PathVariable Long id, @RequestBody MovieDto movieDto) {
+    public ResponseEntity<Object> update(@PathVariable Long id, @Valid @RequestBody MovieDto movieDto) {
         log.info("Request for updating movie: {}", movieDto);
 
         Long movieId = movieDto.getId();
