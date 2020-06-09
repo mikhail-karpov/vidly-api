@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("account")
 @Slf4j
@@ -35,7 +37,7 @@ public class AccountController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Object> register(@RequestBody RegistrationRequest request) {
+    public ResponseEntity<Object> register(@Valid @RequestBody RegistrationRequest request) {
         String email = request.getEmail();
         String password = request.getPassword();
         String matchingPassword = request.getMatchingPassword();
@@ -49,7 +51,7 @@ public class AccountController {
     }
 
     @PostMapping("/auth")
-    public ResponseEntity<Object> authenticate(@RequestBody AuthenticationRequest request) {
+    public ResponseEntity<Object> authenticate(@Valid @RequestBody AuthenticationRequest request) {
             String email = request.getEmail();
             String password = request.getPassword();
 

@@ -8,10 +8,15 @@ import com.sun.istack.Nullable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.util.WebUtils;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @ControllerAdvice
 public class GlobalExceptionHandler  {
@@ -26,6 +31,22 @@ public class GlobalExceptionHandler  {
 
         ApiErrorDto errorDto = new ApiErrorDto(status, e.getMessage());
         return handleExceptionInternal(e, errorDto, new HttpHeaders(), status, request);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Object> handleValidationException(MethodArgumentNotValidException e, WebRequest request) {
+        Map<String, String> errors = new HashMap<>();
+
+        e.getBindingResult().getAllErrors().forEach((error) -> {
+            if (error instanceof FieldError) {
+                String fieldName = ((FieldError) error).getField();
+                String errorMsg = error.getDefaultMessage();
+
+                errors.put(fieldName, errorMsg);
+            }
+        });
+
+        return handleExceptionInternal(e, errors, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
     protected ResponseEntity<Object> handleExceptionInternal(
