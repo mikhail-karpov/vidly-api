@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.mikhailkarpov.vidly.vidlyapi.domain.entity.Movie;
 import lombok.*;
 
+import javax.validation.constraints.*;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -18,11 +20,23 @@ import lombok.*;
 public class MovieDto {
 
     private Long id;
+
+    @NotEmpty(message = "Title is required")
+    @Size(min = 2, max = 100, message = "Title must be from 2 to 100 characters long")
     private String title;
 
     @JsonProperty(value = "genre")
+    @NotNull(message = "Genre is required")
     private GenreDto genreDto;
+
+    @NotNull(message = "Numbers in stock is required")
+    @Min(value = 0, message = "Must be from 0 to 100")
+    @Max(value = 100, message = "Must be from 0 to 100")
     private Integer numberInStock;
+
+    @NotNull(message = "Daily rental rate is required")
+    @Min(value = 0, message = "Must be from 0 to 10")
+    @Max(value = 10, message = "Must be from 0 to 10")
     private Double dailyRentalRate;
 
     public static MovieDto convertToDTO(Movie movie) {

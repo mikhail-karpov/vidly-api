@@ -8,7 +8,6 @@ import com.mikhailkarpov.vidly.vidlyapi.exception.GenreNotFoundException;
 import com.mikhailkarpov.vidly.vidlyapi.exception.MovieNotFoundException;
 import com.mikhailkarpov.vidly.vidlyapi.exception.MyBadRequestException;
 import com.mikhailkarpov.vidly.vidlyapi.service.MovieService;
-import com.mikhailkarpov.vidly.vidlyapi.web.dto.GenreDto;
 import com.mikhailkarpov.vidly.vidlyapi.web.dto.MovieDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -39,7 +38,7 @@ public class MovieServiceImpl implements MovieService {
         if (movieDto.getId() != null)
             throw new MyBadRequestException("Movie id already exists");
 
-        Genre genre = getOrCreateGenre(movieDto);
+        Genre genre = getGenre(movieDto);
 
         Movie movie = new Movie(movieDto.getTitle(), genre, movieDto.getNumberInStock(), movieDto.getDailyRentalRate());
         Movie saved = movieRepository.save(movie);
@@ -79,7 +78,7 @@ public class MovieServiceImpl implements MovieService {
         Long movieId = movieDto.getId();
         Movie movie = movieRepository.findById(movieId).orElseThrow(() -> new MovieNotFoundException(movieId));
 
-        movie.setGenre(getOrCreateGenre(movieDto));
+        movie.setGenre(getGenre(movieDto));
         movie.setTitle(movieDto.getTitle());
         movie.setNumberInStock(movieDto.getNumberInStock());
         movie.setDailyRentalRate(movieDto.getDailyRentalRate());
@@ -88,12 +87,15 @@ public class MovieServiceImpl implements MovieService {
         return MovieDto.convertToDTO(save);
     }
 
-    private Genre getOrCreateGenre(MovieDto movieDto) {
+    private Genre getGenre(MovieDto movieDto) {
         Long genreId = movieDto.getGenreDto().getId();
+
         if (genreId == null) {
-            return new Genre(movieDto.getGenreDto().getName());
-        } else {
-            return genreRepository.findById(genreId).orElseThrow(() -> new GenreNotFoundException(genreId));
+            throw new MyBadRequestException("Genre id is null");
         }
+
+        return genreRepository
+                .findById(genreId)
+                .orElseThrow(() -> new GenreNotFoundException(genreId));
     }
 }

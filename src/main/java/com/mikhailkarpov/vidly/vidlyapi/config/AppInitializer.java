@@ -22,12 +22,14 @@ public class AppInitializer implements CommandLineRunner {
         Genre comedy = new Genre("Comedy");
         Genre thriller = new Genre("Thriller");
         Genre romantic = new Genre("Romantic");
+        Genre action = new Genre("Action");
 
         genreRepository.save(comedy);
         genreRepository.save(thriller);
         genreRepository.save(romantic);
+        genreRepository.save(action);
 
-        Movie dieHard = new Movie("Die Hard", new Genre("Action"), 10, 2.5);
+        Movie dieHard = new Movie("Die Hard", action, 10, 2.5);
         movieRepository.save(dieHard);
     }
 }

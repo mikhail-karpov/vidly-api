@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("api/genres")
+@RequestMapping("genres")
 public class GenreController {
 
     private GenreService genreService;

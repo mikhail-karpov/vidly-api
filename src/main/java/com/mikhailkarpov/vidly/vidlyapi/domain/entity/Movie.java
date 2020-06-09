@@ -14,7 +14,7 @@ public class Movie extends BaseEntity {
 
     private String title;
 
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToOne
     @JoinColumn(name = "genre_id")
     private Genre genre;
 
