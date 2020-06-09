@@ -27,7 +27,7 @@ public class MovieDto {
     private String title;
 
     @JsonProperty(value = "genre")
-    @NotNull
+    @NotNull(message = "Genre is required")
     private GenreDto genreDto;
 
     @NotNull(message = "Numbers in stock is required")
