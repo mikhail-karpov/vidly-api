@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @ToString
-public class Movie extends BaseEntity {
+public class MovieEntity extends BaseEntity {
 
     private String title;
 
@@ -21,7 +21,7 @@ public class Movie extends BaseEntity {
     private Integer numberInStock;
     private Double dailyRentalRate;
 
-    public Movie(String title, Genre genre, Integer numberInStock, Double dailyRentalRate) {
+    public MovieEntity(String title, Genre genre, Integer numberInStock, Double dailyRentalRate) {
         this.title = title;
         this.genre = genre;
         this.numberInStock = numberInStock;

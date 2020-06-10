@@ -1,7 +1,7 @@
 package com.mikhailkarpov.vidly.vidlyapi.config;
 
 import com.mikhailkarpov.vidly.vidlyapi.domain.entity.Genre;
-import com.mikhailkarpov.vidly.vidlyapi.domain.entity.Movie;
+import com.mikhailkarpov.vidly.vidlyapi.domain.entity.MovieEntity;
 import com.mikhailkarpov.vidly.vidlyapi.domain.repo.GenreRepository;
 import com.mikhailkarpov.vidly.vidlyapi.domain.repo.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ public class AppInitializer implements CommandLineRunner {
         genreRepository.save(romantic);
         genreRepository.save(action);
 
-        Movie dieHard = new Movie("Die Hard", action, 10, 2.5);
+        MovieEntity dieHard = new MovieEntity("Die Hard", action, 10, 2.5);
         movieRepository.save(dieHard);
     }
 }

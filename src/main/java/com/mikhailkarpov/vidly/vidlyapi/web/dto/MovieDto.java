@@ -3,7 +3,7 @@ package com.mikhailkarpov.vidly.vidlyapi.web.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.mikhailkarpov.vidly.vidlyapi.domain.entity.Movie;
+import com.mikhailkarpov.vidly.vidlyapi.domain.entity.MovieEntity;
 import lombok.*;
 
 import javax.validation.constraints.*;
@@ -39,14 +39,14 @@ public class MovieDto {
     @Max(value = 10, message = "Must be from 0 to 10")
     private Double dailyRentalRate;
 
-    public static MovieDto convertToDTO(Movie movie) {
+    public static MovieDto convertToDTO(MovieEntity movieEntity) {
         return MovieDto
                 .builder()
-                .id(movie.getId())
-                .title(movie.getTitle())
-                .genreDto(GenreDto.fromEntity(movie.getGenre()))
-                .dailyRentalRate(movie.getDailyRentalRate())
-                .numberInStock(movie.getNumberInStock())
+                .id(movieEntity.getId())
+                .title(movieEntity.getTitle())
+                .genreDto(GenreDto.fromEntity(movieEntity.getGenre()))
+                .dailyRentalRate(movieEntity.getDailyRentalRate())
+                .numberInStock(movieEntity.getNumberInStock())
                 .build();
     }
 }

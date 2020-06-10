@@ -1,7 +1,7 @@
 package com.mikhailkarpov.vidly.vidlyapi.service.impl;
 
 import com.mikhailkarpov.vidly.vidlyapi.domain.entity.Genre;
-import com.mikhailkarpov.vidly.vidlyapi.domain.entity.Movie;
+import com.mikhailkarpov.vidly.vidlyapi.domain.entity.MovieEntity;
 import com.mikhailkarpov.vidly.vidlyapi.domain.repo.GenreRepository;
 import com.mikhailkarpov.vidly.vidlyapi.domain.repo.MovieRepository;
 import com.mikhailkarpov.vidly.vidlyapi.exception.GenreNotFoundException;
@@ -40,8 +40,8 @@ public class MovieServiceImpl implements MovieService {
 
         Genre genre = getGenre(movieDto);
 
-        Movie movie = new Movie(movieDto.getTitle(), genre, movieDto.getNumberInStock(), movieDto.getDailyRentalRate());
-        Movie saved = movieRepository.save(movie);
+        MovieEntity movieEntity = new MovieEntity(movieDto.getTitle(), genre, movieDto.getNumberInStock(), movieDto.getDailyRentalRate());
+        MovieEntity saved = movieRepository.save(movieEntity);
 
         return MovieDto.convertToDTO(saved);
     }
@@ -51,23 +51,23 @@ public class MovieServiceImpl implements MovieService {
     public void deleteById(Long id) {
         log.info("Deleting movie with id = {}", id);
 
-        Movie movie = movieRepository.findById(id).orElseThrow(() -> new MovieNotFoundException(id));
-        movieRepository.delete(movie);
+        MovieEntity movieEntity = movieRepository.findById(id).orElseThrow(() -> new MovieNotFoundException(id));
+        movieRepository.delete(movieEntity);
     }
 
     @Override
     @Transactional
     public List<MovieDto> findAll() {
-        List<Movie> movies = new ArrayList<>();
-        movieRepository.findAll().forEach(movies::add);
-        return Collections.unmodifiableList(movies.stream().map(MovieDto::convertToDTO).collect(Collectors.toList()));
+        List<MovieEntity> movieEntities = new ArrayList<>();
+        movieRepository.findAll().forEach(movieEntities::add);
+        return Collections.unmodifiableList(movieEntities.stream().map(MovieDto::convertToDTO).collect(Collectors.toList()));
     }
 
     @Override
     @Transactional
     public MovieDto findById(Long id) {
-        Movie movie = movieRepository.findById(id).orElseThrow(() -> new MovieNotFoundException(id));
-        return MovieDto.convertToDTO(movie);
+        MovieEntity movieEntity = movieRepository.findById(id).orElseThrow(() -> new MovieNotFoundException(id));
+        return MovieDto.convertToDTO(movieEntity);
     }
 
     @Override
@@ -76,14 +76,14 @@ public class MovieServiceImpl implements MovieService {
         log.info("Updating movie: {}", movieDto);
 
         Long movieId = movieDto.getId();
-        Movie movie = movieRepository.findById(movieId).orElseThrow(() -> new MovieNotFoundException(movieId));
+        MovieEntity movieEntity = movieRepository.findById(movieId).orElseThrow(() -> new MovieNotFoundException(movieId));
 
-        movie.setGenre(getGenre(movieDto));
-        movie.setTitle(movieDto.getTitle());
-        movie.setNumberInStock(movieDto.getNumberInStock());
-        movie.setDailyRentalRate(movieDto.getDailyRentalRate());
+        movieEntity.setGenre(getGenre(movieDto));
+        movieEntity.setTitle(movieDto.getTitle());
+        movieEntity.setNumberInStock(movieDto.getNumberInStock());
+        movieEntity.setDailyRentalRate(movieDto.getDailyRentalRate());
 
-        Movie save = movieRepository.save(movie);
+        MovieEntity save = movieRepository.save(movieEntity);
         return MovieDto.convertToDTO(save);
     }
 
