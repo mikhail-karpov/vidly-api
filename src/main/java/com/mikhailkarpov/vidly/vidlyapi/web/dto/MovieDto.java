@@ -39,14 +39,14 @@ public class MovieDto {
     @Max(value = 10, message = "Must be from 0 to 10")
     private Double dailyRentalRate;
 
-    public static MovieDto convertToDTO(MovieEntity movieEntity) {
+    public static MovieDto convertToDTO(MovieEntity movie) {
         return MovieDto
                 .builder()
-                .id(movieEntity.getId())
-                .title(movieEntity.getTitle())
-                .genreDto(GenreDto.fromEntity(movieEntity.getGenreEntity()))
-                .dailyRentalRate(movieEntity.getDailyRentalRate())
-                .numberInStock(movieEntity.getNumberInStock())
+                .id(movie.getId())
+                .title(movie.getTitle())
+                .genreDto(GenreDto.fromEntity(movie.getGenreEntity()))
+                .dailyRentalRate(movie.getDailyRentalRate())
+                .numberInStock(movie.getNumberInStock())
                 .build();
     }
 }
