@@ -6,12 +6,14 @@ import com.mikhailkarpov.vidly.vidlyapi.service.GenreService;
 import com.mikhailkarpov.vidly.vidlyapi.web.dto.GenreDto;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class GenreServiceImpl implements GenreService {
 
     private GenreRepository genreRepository;

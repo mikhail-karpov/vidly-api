@@ -1,21 +1,40 @@
 package com.mikhailkarpov.vidly.vidlyapi.domain.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
-@Entity
+@Entity(name = "User")
 @Table(name = "users")
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED) // for JPA
 @AllArgsConstructor
 @Getter
-@Setter
 public class UserEntity extends BaseEntity {
 
+    @Setter
     private String email;
+
+    @Setter
     private String password;
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<UserRoleEntity> roles = new HashSet<>();
+
+    public void addRole(UserRoleEntity role) {
+        if (this.roles.add(role)) {
+            role.getUsers().add(this);
+        }
+    }
+
+    public void deleteRole(UserRoleEntity role) {
+        this.roles.remove(role);
+        role.getUsers().remove(this);
+    }
 }
