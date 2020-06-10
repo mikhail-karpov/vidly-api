@@ -44,7 +44,7 @@ public class MovieDto {
                 .builder()
                 .id(movieEntity.getId())
                 .title(movieEntity.getTitle())
-                .genreDto(GenreDto.fromEntity(movieEntity.getGenre()))
+                .genreDto(GenreDto.fromEntity(movieEntity.getGenreEntity()))
                 .dailyRentalRate(movieEntity.getDailyRentalRate())
                 .numberInStock(movieEntity.getNumberInStock())
                 .build();

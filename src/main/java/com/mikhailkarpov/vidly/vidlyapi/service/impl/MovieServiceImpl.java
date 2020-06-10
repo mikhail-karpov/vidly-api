@@ -1,6 +1,6 @@
 package com.mikhailkarpov.vidly.vidlyapi.service.impl;
 
-import com.mikhailkarpov.vidly.vidlyapi.domain.entity.Genre;
+import com.mikhailkarpov.vidly.vidlyapi.domain.entity.GenreEntity;
 import com.mikhailkarpov.vidly.vidlyapi.domain.entity.MovieEntity;
 import com.mikhailkarpov.vidly.vidlyapi.domain.repo.GenreRepository;
 import com.mikhailkarpov.vidly.vidlyapi.domain.repo.MovieRepository;
@@ -38,9 +38,9 @@ public class MovieServiceImpl implements MovieService {
         if (movieDto.getId() != null)
             throw new MyBadRequestException("Movie id already exists");
 
-        Genre genre = getGenre(movieDto);
+        GenreEntity genreEntity = getGenre(movieDto);
 
-        MovieEntity movieEntity = new MovieEntity(movieDto.getTitle(), genre, movieDto.getNumberInStock(), movieDto.getDailyRentalRate());
+        MovieEntity movieEntity = new MovieEntity(movieDto.getTitle(), genreEntity, movieDto.getNumberInStock(), movieDto.getDailyRentalRate());
         MovieEntity saved = movieRepository.save(movieEntity);
 
         return MovieDto.convertToDTO(saved);
@@ -78,7 +78,7 @@ public class MovieServiceImpl implements MovieService {
         Long movieId = movieDto.getId();
         MovieEntity movieEntity = movieRepository.findById(movieId).orElseThrow(() -> new MovieNotFoundException(movieId));
 
-        movieEntity.setGenre(getGenre(movieDto));
+        movieEntity.setGenreEntity(getGenre(movieDto));
         movieEntity.setTitle(movieDto.getTitle());
         movieEntity.setNumberInStock(movieDto.getNumberInStock());
         movieEntity.setDailyRentalRate(movieDto.getDailyRentalRate());
@@ -87,7 +87,7 @@ public class MovieServiceImpl implements MovieService {
         return MovieDto.convertToDTO(save);
     }
 
-    private Genre getGenre(MovieDto movieDto) {
+    private GenreEntity getGenre(MovieDto movieDto) {
         Long genreId = movieDto.getGenreDto().getId();
 
         if (genreId == null) {

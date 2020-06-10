@@ -1,7 +1,7 @@
 package com.mikhailkarpov.vidly.vidlyapi.domain.repo;
 
-import com.mikhailkarpov.vidly.vidlyapi.domain.entity.Genre;
+import com.mikhailkarpov.vidly.vidlyapi.domain.entity.GenreEntity;
 import org.springframework.data.repository.CrudRepository;
 
-public interface GenreRepository extends CrudRepository<Genre, Long> {
+public interface GenreRepository extends CrudRepository<GenreEntity, Long> {
 }

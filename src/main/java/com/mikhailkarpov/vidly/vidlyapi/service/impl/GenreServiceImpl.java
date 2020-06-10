@@ -1,6 +1,6 @@
 package com.mikhailkarpov.vidly.vidlyapi.service.impl;
 
-import com.mikhailkarpov.vidly.vidlyapi.domain.entity.Genre;
+import com.mikhailkarpov.vidly.vidlyapi.domain.entity.GenreEntity;
 import com.mikhailkarpov.vidly.vidlyapi.domain.repo.GenreRepository;
 import com.mikhailkarpov.vidly.vidlyapi.service.GenreService;
 import com.mikhailkarpov.vidly.vidlyapi.web.dto.GenreDto;
@@ -22,16 +22,16 @@ public class GenreServiceImpl implements GenreService {
 
     @Override
     public List<GenreDto> findAll() {
-        List<Genre> genres = new ArrayList<>();
-        genreRepository.findAll().forEach(genres::add);
-        return genres
+        List<GenreEntity> genreEntities = new ArrayList<>();
+        genreRepository.findAll().forEach(genreEntities::add);
+        return genreEntities
                 .stream()
                 .map(this::convertToDto)
                 .sorted(Comparator.comparing(GenreDto::getName))
                 .collect(Collectors.toList());
     }
 
-    private GenreDto convertToDto(Genre genre) {
-        return new GenreDto(genre.getId(), genre.getName());
+    private GenreDto convertToDto(GenreEntity genreEntity) {
+        return new GenreDto(genreEntity.getId(), genreEntity.getName());
     }
 }

@@ -12,11 +12,11 @@ import javax.persistence.Table;
 @NoArgsConstructor(access = AccessLevel.PROTECTED) // for JPA
 @Getter
 @Setter
-public class Genre extends BaseEntity {
+public class GenreEntity extends BaseEntity {
 
     private String name;
 
-    public Genre(String name) {
+    public GenreEntity(String name) {
         this.name = name;
     }
 }

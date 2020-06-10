@@ -1,6 +1,6 @@
 package com.mikhailkarpov.vidly.vidlyapi.config;
 
-import com.mikhailkarpov.vidly.vidlyapi.domain.entity.Genre;
+import com.mikhailkarpov.vidly.vidlyapi.domain.entity.GenreEntity;
 import com.mikhailkarpov.vidly.vidlyapi.domain.entity.MovieEntity;
 import com.mikhailkarpov.vidly.vidlyapi.domain.repo.GenreRepository;
 import com.mikhailkarpov.vidly.vidlyapi.domain.repo.MovieRepository;
@@ -19,10 +19,10 @@ public class AppInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        Genre comedy = new Genre("Comedy");
-        Genre thriller = new Genre("Thriller");
-        Genre romantic = new Genre("Romantic");
-        Genre action = new Genre("Action");
+        GenreEntity comedy = new GenreEntity("Comedy");
+        GenreEntity thriller = new GenreEntity("Thriller");
+        GenreEntity romantic = new GenreEntity("Romantic");
+        GenreEntity action = new GenreEntity("Action");
 
         genreRepository.save(comedy);
         genreRepository.save(thriller);

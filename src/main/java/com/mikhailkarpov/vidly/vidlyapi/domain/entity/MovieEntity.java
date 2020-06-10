@@ -16,14 +16,14 @@ public class MovieEntity extends BaseEntity {
 
     @OneToOne
     @JoinColumn(name = "genre_id")
-    private Genre genre;
+    private GenreEntity genreEntity;
 
     private Integer numberInStock;
     private Double dailyRentalRate;
 
-    public MovieEntity(String title, Genre genre, Integer numberInStock, Double dailyRentalRate) {
+    public MovieEntity(String title, GenreEntity genreEntity, Integer numberInStock, Double dailyRentalRate) {
         this.title = title;
-        this.genre = genre;
+        this.genreEntity = genreEntity;
         this.numberInStock = numberInStock;
         this.dailyRentalRate = dailyRentalRate;
     }
