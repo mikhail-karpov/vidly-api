@@ -1,6 +1,6 @@
 package com.mikhailkarpov.vidly.vidlyapi.security;
 
-import com.mikhailkarpov.vidly.vidlyapi.domain.entity.User;
+import com.mikhailkarpov.vidly.vidlyapi.domain.entity.UserEntity;
 import com.mikhailkarpov.vidly.vidlyapi.domain.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -20,7 +20,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository
+        UserEntity user = userRepository
                 .findByEmail(username)
                 .orElseThrow(() -> {
                     String errMsg = String.format("User with email %s not found", username);

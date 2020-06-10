@@ -1,6 +1,5 @@
 package com.mikhailkarpov.vidly.vidlyapi.service;
 
-import com.mikhailkarpov.vidly.vidlyapi.domain.entity.User;
 import com.mikhailkarpov.vidly.vidlyapi.web.dto.UserDto;
 
 import java.util.List;

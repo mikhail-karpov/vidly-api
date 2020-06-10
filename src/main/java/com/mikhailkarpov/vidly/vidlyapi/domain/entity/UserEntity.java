@@ -14,7 +14,7 @@ import javax.persistence.Table;
 @AllArgsConstructor
 @Getter
 @Setter
-public class User extends BaseEntity {
+public class UserEntity extends BaseEntity {
 
     private String email;
     private String password;

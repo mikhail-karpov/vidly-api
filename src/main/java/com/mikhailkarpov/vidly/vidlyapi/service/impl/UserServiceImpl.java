@@ -1,11 +1,10 @@
 package com.mikhailkarpov.vidly.vidlyapi.service.impl;
 
-import com.mikhailkarpov.vidly.vidlyapi.domain.entity.User;
+import com.mikhailkarpov.vidly.vidlyapi.domain.entity.UserEntity;
 import com.mikhailkarpov.vidly.vidlyapi.domain.repo.UserRepository;
 import com.mikhailkarpov.vidly.vidlyapi.exception.UserAlreadyExistsException;
 import com.mikhailkarpov.vidly.vidlyapi.service.UserService;
 import com.mikhailkarpov.vidly.vidlyapi.web.dto.UserDto;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -33,16 +32,16 @@ public class UserServiceImpl implements UserService {
             throw new UserAlreadyExistsException();
 
         String encodedPassword = passwordEncoder.encode(password);
-        User user = userRepository.save(new User(email, encodedPassword));
+        UserEntity userEntity = userRepository.save(new UserEntity(email, encodedPassword));
 
-        return UserDto.fromEntity(user);
+        return UserDto.fromEntity(userEntity);
     }
 
     @Override
     public List<UserDto> findAll() {
         List<UserDto> users = new ArrayList<>();
 
-        userRepository.findAll().forEach(user -> users.add(UserDto.fromEntity(user)));
+        userRepository.findAll().forEach(userEntity -> users.add(UserDto.fromEntity(userEntity)));
 
         return Collections.unmodifiableList(users);
     }
