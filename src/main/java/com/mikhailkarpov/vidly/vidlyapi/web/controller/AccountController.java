@@ -38,6 +38,8 @@ public class AccountController {
 
     @PostMapping("/register")
     public ResponseEntity<Object> register(@Valid @RequestBody RegistrationRequest request) {
+        log.debug("Request for registering new user: {}", request);
+
         String email = request.getEmail();
         String password = request.getPassword();
         String matchingPassword = request.getMatchingPassword();
@@ -52,10 +54,12 @@ public class AccountController {
 
     @PostMapping("/auth")
     public ResponseEntity<Object> authenticate(@Valid @RequestBody AuthenticationRequest request) {
-            String email = request.getEmail();
-            String password = request.getPassword();
+        log.debug("Request for authentication: {}", request);
 
-            return authenticateInternal(email, password);
+        String email = request.getEmail();
+        String password = request.getPassword();
+
+        return authenticateInternal(email, password);
     }
 
     private ResponseEntity<Object> authenticateInternal(String username, String password) {

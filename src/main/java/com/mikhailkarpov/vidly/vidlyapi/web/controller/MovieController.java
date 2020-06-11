@@ -27,11 +27,11 @@ public class MovieController {
 
         if (genreId.isPresent()) {
             Long id = genreId.get();
-            log.info("Request for movies by genre id {}", id);
+            log.debug("Request for movies with genre_id {}", id);
             movies = movieService.findAllByGenreId(id);
 
         } else {
-            log.info("Request for all movies");
+            log.debug("Request for all movies");
             movies = movieService.findAll();
         }
 
@@ -40,25 +40,26 @@ public class MovieController {
 
     @GetMapping("{id}")
     public ResponseEntity<Object> findById(@PathVariable Long id) {
-        log.info("Request for movie by id = {}", id);
+        log.debug("Request for movie with id {}", id);
         MovieDto movie = movieService.findById(id);
         return ResponseEntity.ok(movie);
     }
 
     @PostMapping
     public ResponseEntity<Object> create(@Valid @RequestBody MovieDto movieDto) {
-        log.info("Request for creating new movie: {}", movieDto);
+        log.debug("Request for creating new movie: {}", movieDto);
         MovieDto responseBody = movieService.create(movieDto);
         return ResponseEntity.ok(responseBody);
     }
 
     @PutMapping("{id}")
     public ResponseEntity<Object> update(@PathVariable Long id, @Valid @RequestBody MovieDto movieDto) {
-        log.info("Request for updating movie: {}", movieDto);
+        log.debug("Request for updating movie: {}", movieDto);
 
         Long movieId = movieDto.getId();
-        if (movieId == null)
-            return ResponseEntity.badRequest().body("Movie id can't be null");
+        if (movieId == null) {
+            return ResponseEntity.badRequest().body("Movie id is null");
+        }
         else if (!movieId.equals(id))
             return ResponseEntity.badRequest().body("Movie id and URI id don't match");
 
@@ -68,7 +69,7 @@ public class MovieController {
 
     @DeleteMapping("{id}")
     public ResponseEntity<Object> delete(@PathVariable Long id) {
-        log.info("Request for deleting movie by id = {}", id);
+        log.debug("Request for deleting movie with id {}", id);
         movieService.deleteById(id);
         return ResponseEntity.ok().build();
     }

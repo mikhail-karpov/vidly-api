@@ -31,7 +31,7 @@ public class JwtVerifierFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        log.debug("Filtering JWT...");
+        log.trace("Filtering JWT...");
 
         try {
             String authorizationHeader = request.getHeader("Authorization");
@@ -50,7 +50,7 @@ public class JwtVerifierFilter extends OncePerRequestFilter {
                 token.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                 SecurityContextHolder.getContext().setAuthentication(token);
-                log.info("Authentication set: {}", token);
+                log.info("User authenticated: {}", user);
             }
 
         } catch (JwtCannotBeTrustedException | UsernameNotFoundException e) {

@@ -25,28 +25,28 @@ public class UserRoleController {
 
     @GetMapping
     public ResponseEntity<UserRoleDtoList> findAll() {
-        log.info("Request for all roles");
+        log.debug("Request for all user_roles");
         List<UserRoleDto> roleList = userRoleService.findAll();
         return ResponseEntity.ok(new UserRoleDtoList(roleList));
     }
 
     @GetMapping("{id}")
     public ResponseEntity<UserRoleDto> findById(@PathVariable Long id) {
-        log.info("Request for role by id {}", id);
+        log.debug("Request for user_role with id {}", id);
         UserRoleDto userRole = userRoleService.findById(id).orElseThrow(() -> new UserRoleNotFoundException(id));
         return ResponseEntity.ok(userRole);
     }
 
     @PostMapping
     public ResponseEntity<UserRoleDto> create(@Valid @RequestBody UserRoleDto role) {
-        log.info("Request to create new user_role: {}", role);
+        log.debug("Request to create new user_role: {}", role);
         UserRoleDto userRole = userRoleService.create(role);
         return ResponseEntity.ok(userRole);
     }
 
     @PutMapping("{id}")
     public ResponseEntity<UserRoleDto> update(@PathVariable Long id, @Valid @RequestBody UserRoleDto role) {
-        log.info("Request to update user_role: {}", role);
+        log.debug("Request to update user_role: {}", role);
 
         Long roleId = role.getId();
 
@@ -62,7 +62,7 @@ public class UserRoleController {
     @DeleteMapping("{id}")
     @ResponseBody
     public void delete(@PathVariable Long id) {
-        log.info("Request to delete role with id {}", id);
+        log.debug("Request to delete role with id {}", id);
         userRoleService.deleteById(id);
     }
 }
