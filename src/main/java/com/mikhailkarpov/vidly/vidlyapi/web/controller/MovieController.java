@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("movies")
@@ -21,9 +22,19 @@ public class MovieController {
     }
 
     @GetMapping
-    public ResponseEntity<List<MovieDto>> findAll() {
-        log.info("Request for all movies");
-        List<MovieDto> movies = movieService.findAll();
+    public ResponseEntity<List<MovieDto>> findAll(@RequestParam Optional<Long> genreId) {
+        List<MovieDto> movies;
+
+        if (genreId.isPresent()) {
+            Long id = genreId.get();
+            log.info("Request for movies by genre id {}", id);
+            movies = movieService.findAllByGenreId(id);
+
+        } else {
+            log.info("Request for all movies");
+            movies = movieService.findAll();
+        }
+
         return ResponseEntity.ok(movies);
     }
 

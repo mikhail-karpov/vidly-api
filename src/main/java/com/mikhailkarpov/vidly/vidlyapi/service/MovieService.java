@@ -12,7 +12,10 @@ public interface MovieService {
 
     List<MovieDto> findAll();
 
+    List<MovieDto> findAllByGenreId(Long genreId);
+
     MovieDto findById(Long id);
 
     MovieDto update(MovieDto movieDto);
+
 }

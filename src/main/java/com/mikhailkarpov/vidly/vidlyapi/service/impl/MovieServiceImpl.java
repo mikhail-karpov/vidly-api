@@ -11,8 +11,8 @@ import com.mikhailkarpov.vidly.vidlyapi.service.MovieService;
 import com.mikhailkarpov.vidly.vidlyapi.web.dto.MovieDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -56,7 +56,7 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<MovieDto> findAll() {
         List<MovieEntity> movieEntities = new ArrayList<>();
         movieRepository.findAll().forEach(movieEntities::add);
@@ -64,7 +64,17 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
+    public List<MovieDto> findAllByGenreId(Long genreId) {
+        return movieRepository
+                .findAllByGenre_Id(genreId)
+                .stream()
+                .map(MovieDto::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public MovieDto findById(Long id) {
         MovieEntity movieEntity = movieRepository.findById(id).orElseThrow(() -> new MovieNotFoundException(id));
         return MovieDto.convertToDTO(movieEntity);
@@ -78,7 +88,7 @@ public class MovieServiceImpl implements MovieService {
         Long movieId = movieDto.getId();
         MovieEntity movieEntity = movieRepository.findById(movieId).orElseThrow(() -> new MovieNotFoundException(movieId));
 
-        movieEntity.setGenreEntity(getGenre(movieDto));
+        movieEntity.setGenre(getGenre(movieDto));
         movieEntity.setTitle(movieDto.getTitle());
         movieEntity.setNumberInStock(movieDto.getNumberInStock());
         movieEntity.setDailyRentalRate(movieDto.getDailyRentalRate());
