@@ -44,8 +44,10 @@ public class AccountController {
         String password = request.getPassword();
         String matchingPassword = request.getMatchingPassword();
 
-        if (!password.equals(matchingPassword))
-            return ResponseEntity.badRequest().body("Passwords don't match");
+        if (!password.equals(matchingPassword)) {
+            ApiError error = new ApiError("Passwords don't match");
+            return ResponseEntity.badRequest().body(error);
+        }
 
         userService.register(email, password);
 
@@ -72,7 +74,7 @@ public class AccountController {
             log.warn("Authentication exception: " + e.getMessage());
 
             HttpStatus status = HttpStatus.BAD_REQUEST;
-            ApiError errorDto = new ApiError(status, "Invalid email or password");
+            ApiError errorDto = new ApiError("Invalid email or password", e);
             return ResponseEntity.status(status).body(errorDto);
         }
     }
