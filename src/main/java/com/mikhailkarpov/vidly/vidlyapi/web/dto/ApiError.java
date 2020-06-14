@@ -4,12 +4,12 @@ import lombok.Data;
 import org.springframework.http.HttpStatus;
 
 @Data
-public class ApiErrorDto {
+public class ApiError {
 
     private Integer status;
     private String message;
 
-    public ApiErrorDto(HttpStatus status, String message) {
+    public ApiError(HttpStatus status, String message) {
         this.status = status.value();
         this.message = message;
     }

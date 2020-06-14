@@ -2,7 +2,7 @@ package com.mikhailkarpov.vidly.vidlyapi.web.controller;
 
 import com.mikhailkarpov.vidly.vidlyapi.security.JwtService;
 import com.mikhailkarpov.vidly.vidlyapi.service.UserService;
-import com.mikhailkarpov.vidly.vidlyapi.web.dto.ApiErrorDto;
+import com.mikhailkarpov.vidly.vidlyapi.web.dto.ApiError;
 import com.mikhailkarpov.vidly.vidlyapi.web.dto.AuthenticationRequest;
 import com.mikhailkarpov.vidly.vidlyapi.web.dto.AuthenticationResponse;
 import com.mikhailkarpov.vidly.vidlyapi.web.dto.RegistrationRequest;
@@ -72,7 +72,7 @@ public class AccountController {
             log.warn("Authentication exception: " + e.getMessage());
 
             HttpStatus status = HttpStatus.BAD_REQUEST;
-            ApiErrorDto errorDto = new ApiErrorDto(status, "Invalid email or password");
+            ApiError errorDto = new ApiError(status, "Invalid email or password");
             return ResponseEntity.status(status).body(errorDto);
         }
     }

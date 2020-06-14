@@ -3,7 +3,7 @@ package com.mikhailkarpov.vidly.vidlyapi.config;
 import com.mikhailkarpov.vidly.vidlyapi.exception.MyBadRequestException;
 import com.mikhailkarpov.vidly.vidlyapi.exception.MyResourceNotFoundException;
 import com.mikhailkarpov.vidly.vidlyapi.exception.UserAlreadyExistsException;
-import com.mikhailkarpov.vidly.vidlyapi.web.dto.ApiErrorDto;
+import com.mikhailkarpov.vidly.vidlyapi.web.dto.ApiError;
 import com.mikhailkarpov.vidly.vidlyapi.web.dto.ValidationConstraintResponse;
 import com.sun.istack.Nullable;
 import org.springframework.http.HttpHeaders;
@@ -30,7 +30,7 @@ public class GlobalExceptionHandler  {
             status = HttpStatus.NOT_FOUND;
         }
 
-        ApiErrorDto errorDto = new ApiErrorDto(status, e.getMessage());
+        ApiError errorDto = new ApiError(status, e.getMessage());
         return handleExceptionInternal(e, errorDto, new HttpHeaders(), status, request);
     }
 
