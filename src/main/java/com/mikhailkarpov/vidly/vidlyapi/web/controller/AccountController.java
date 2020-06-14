@@ -6,8 +6,6 @@ import com.mikhailkarpov.vidly.vidlyapi.security.JwtService;
 import com.mikhailkarpov.vidly.vidlyapi.service.UserService;
 import com.mikhailkarpov.vidly.vidlyapi.web.dto.*;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
@@ -37,20 +35,13 @@ public class AccountController {
     }
 
     @PostMapping("/register")
-    public AuthenticationResponse register(@Valid @RequestBody UserRegistrationRequest request) {
+    public AuthenticationResponse register(@Valid @RequestBody RegistrationRequest request) {
         log.debug("Request for registering new user: {}", request);
 
         String email = request.getEmail();
         String password = request.getPassword();
 
-        UserDto user = UserDto.builder()
-                .email(email)
-                .password(password)
-                .matchingPassword(request.getMatchingPassword())
-                .roles(Collections.singletonList(UserRole.USER))
-                .build();
-
-        UserDto created = userService.create(user);
+        UserDto created = userService.create(email, password, Collections.singleton(UserRole.USER));
         String jwt = authenticateInternal(email, password);
 
         return new AuthenticationResponse(jwt, created);

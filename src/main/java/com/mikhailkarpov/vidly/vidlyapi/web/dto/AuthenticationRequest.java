@@ -4,11 +4,8 @@ import lombok.*;
 
 import javax.validation.constraints.NotEmpty;
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@Setter
-@ToString
+@NoArgsConstructor(access = AccessLevel.PROTECTED) // for unmarshalling
+@Data
 public class AuthenticationRequest {
 
     @NotEmpty
@@ -16,4 +13,12 @@ public class AuthenticationRequest {
 
     @NotEmpty
     private String password;
+
+    @Override
+    public String toString() {
+        return "AuthenticationRequest{" +
+                "email='" + email + '\'' +
+                ", password='" + "[SECURED]" + '\'' +
+                '}';
+    }
 }

@@ -1,37 +1,35 @@
 package com.mikhailkarpov.vidly.vidlyapi.web.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.mikhailkarpov.vidly.vidlyapi.domain.entity.UserEntity;
 import com.mikhailkarpov.vidly.vidlyapi.domain.entity.UserRole;
-import com.mikhailkarpov.vidly.vidlyapi.validation.ValidPassword;
-import lombok.*;
+import com.mikhailkarpov.vidly.vidlyapi.validation.Password;
+import lombok.Data;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-@Getter
+import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
+
+@Data
 public class UserDto {
 
     private Long id;
 
-    @Email
-    @NotEmpty
+    @Email(message = "Invalid email")
+    @NotEmpty(message = "Email is required")
     private String email;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @ValidPassword
+    @JsonProperty(access = WRITE_ONLY)
+    @NotEmpty(message = "Password is required")
+    @Size(min = 8, message = "Password must be at least 8 characters long")
+    @Password(message = "Password must contain at least one upper-case, one lower-case and one special symbol characters")
     private String password;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @ValidPassword
-    private String matchingPassword;
-
+    @NotEmpty
     private List<UserRole> roles;
 
     public static UserDto fromEntity(UserEntity entity) {
@@ -39,8 +37,8 @@ public class UserDto {
 
         dto.id = entity.getId();
         dto.email = entity.getEmail();
-        dto.roles = entity.getRoles().stream().collect(Collectors.toList());
         dto.password = entity.getPassword();
+        dto.roles = new ArrayList<>(entity.getRoles());
 
         return dto;
     }
@@ -49,9 +47,8 @@ public class UserDto {
     public String toString() {
         return "UserDto{" +
                 "id=" + id +
-                ", email='" + email + '\'' +
+                ", email='" + getEmail() + '\'' +
                 ", password='" + "[******]" + '\'' +
-                ", matchingPassword='" + "[******]" + '\'' +
                 ", roles=" + roles +
                 '}';
     }

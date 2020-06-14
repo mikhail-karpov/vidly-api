@@ -9,6 +9,7 @@ import com.sun.istack.Nullable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -26,7 +27,7 @@ public class GlobalExceptionHandler  {
             status = HttpStatus.NOT_FOUND;
         }
 
-        ApiError errorDto = new ApiError(e.getMessage());
+        ApiError errorDto = new ApiError(e);
         return handleExceptionInternal(e, errorDto, new HttpHeaders(), status, request);
     }
 
@@ -35,6 +36,13 @@ public class GlobalExceptionHandler  {
         ApiValidationError apiError = new ApiValidationError(e.getBindingResult());
 
         return handleExceptionInternal(e, apiError, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<Object> handleAccessDeniedException(AccessDeniedException e, WebRequest request) {
+        ApiError apiError = new ApiError("Access denied");
+
+        return handleExceptionInternal(e, apiError, new HttpHeaders(), HttpStatus.FORBIDDEN, request);
     }
 
     protected ResponseEntity<Object> handleExceptionInternal(

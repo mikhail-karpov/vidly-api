@@ -3,7 +3,7 @@ package com.mikhailkarpov.vidly.vidlyapi.service.impl;
 import com.mikhailkarpov.vidly.vidlyapi.domain.entity.UserEntity;
 import com.mikhailkarpov.vidly.vidlyapi.domain.entity.UserRole;
 import com.mikhailkarpov.vidly.vidlyapi.domain.repo.UserRepository;
-import com.mikhailkarpov.vidly.vidlyapi.exception.MyBadRequestException;
+import com.mikhailkarpov.vidly.vidlyapi.exception.UserAlreadyExistsException;
 import com.mikhailkarpov.vidly.vidlyapi.exception.UserNotFoundException;
 import com.mikhailkarpov.vidly.vidlyapi.service.UserService;
 import com.mikhailkarpov.vidly.vidlyapi.web.dto.UserDto;
@@ -28,17 +28,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto create(UserDto userDto) {
-        String password = userDto.getPassword();
-        String matchingPassword = userDto.getMatchingPassword();
+    public UserDto create(String email, String password, Set<UserRole> roles) {
+        if (userRepository.existsUserByEmail(email))
+            throw new UserAlreadyExistsException();
 
-        if (!password.equals(matchingPassword))
-            throw new MyBadRequestException("Passwords don't match");
-
-        String email = userDto.getEmail();
         String encodedPassword = passwordEncoder.encode(password);
-        Set<UserRole> roles = new HashSet<>(userDto.getRoles());
-
         UserEntity user = userRepository.save(new UserEntity(email, encodedPassword, roles));
         log.info("User created: {}", user);
 

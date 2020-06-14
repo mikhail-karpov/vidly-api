@@ -8,7 +8,7 @@ import java.util.Set;
 
 public interface UserService {
 
-    UserDto create(UserDto userDto);
+    UserDto create(String email, String password, Set<UserRole> roles);
 
     void delete(Long userId);
 

@@ -28,12 +28,8 @@ public class GenreServiceImpl implements GenreService {
         genreRepository.findAll().forEach(genreEntities::add);
         return genreEntities
                 .stream()
-                .map(this::convertToDto)
+                .map(GenreDto::fromEntity)
                 .sorted(Comparator.comparing(GenreDto::getName))
                 .collect(Collectors.toList());
-    }
-
-    private GenreDto convertToDto(GenreEntity genreEntity) {
-        return new GenreDto(genreEntity.getId(), genreEntity.getName());
     }
 }

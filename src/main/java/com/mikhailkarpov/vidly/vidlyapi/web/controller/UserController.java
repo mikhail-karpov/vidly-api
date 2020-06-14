@@ -1,18 +1,21 @@
 package com.mikhailkarpov.vidly.vidlyapi.web.controller;
 
+import com.mikhailkarpov.vidly.vidlyapi.domain.entity.UserRole;
 import com.mikhailkarpov.vidly.vidlyapi.service.UserService;
 import com.mikhailkarpov.vidly.vidlyapi.web.dto.ApiError;
 import com.mikhailkarpov.vidly.vidlyapi.web.dto.UserDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import java.util.HashSet;
 import java.util.List;
 
 @RestController
 @RequestMapping("users")
 @Slf4j
+@Secured("ROLE_ADMIN")
 public class UserController {
 
     private UserService userService;
@@ -34,13 +37,18 @@ public class UserController {
     }
 
     @PostMapping
-    public UserDto create(@Valid @RequestBody UserDto userDto) {
+    public UserDto create(@RequestBody UserDto userDto) {
         log.debug("Request for creating user: {}", userDto);
-        return userService.create(userDto);
+
+        String email = userDto.getEmail();
+        String password = userDto.getPassword();
+        List<UserRole> roles = userDto.getRoles();
+
+        return userService.create(email, password, new HashSet<>(roles));
     }
 
     @PutMapping("{userId}")
-    public ResponseEntity<Object> update(@PathVariable Long userId, @Valid @RequestBody UserDto userDto) {
+    public ResponseEntity<Object> update(@PathVariable Long userId, @RequestBody UserDto userDto) {
         log.debug("Request for updating user with id {}: {}", userId, userDto);
 
         Long id = userDto.getId();

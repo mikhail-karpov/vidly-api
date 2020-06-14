@@ -1,9 +1,5 @@
 package com.mikhailkarpov.vidly.vidlyapi.web.dto;
 
-import lombok.*;
-
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Getter
 public class AuthenticationResponse {
 
     private String jwt;
@@ -12,5 +8,13 @@ public class AuthenticationResponse {
     public AuthenticationResponse(String jwt, UserDto user) {
         this.jwt = jwt;
         this.user = user;
+    }
+
+    public String getJwt() {
+        return jwt;
+    }
+
+    public UserDto getUser() {
+        return user;
     }
 }

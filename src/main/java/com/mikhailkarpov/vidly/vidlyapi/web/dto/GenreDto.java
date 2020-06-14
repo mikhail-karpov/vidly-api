@@ -1,19 +1,12 @@
 package com.mikhailkarpov.vidly.vidlyapi.web.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.mikhailkarpov.vidly.vidlyapi.domain.entity.GenreEntity;
-import lombok.*;
+import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@Setter
-@EqualsAndHashCode
-@ToString
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@Data
 public class GenreDto {
 
     private Long id;
@@ -23,7 +16,11 @@ public class GenreDto {
     private String name;
 
     public static GenreDto fromEntity(GenreEntity entity) {
-        return new GenreDto(entity.getId(), entity.getName());
-    }
+        GenreDto dto = new GenreDto();
 
+        dto.id = entity.getId();
+        dto.name = entity.getName();
+
+        return dto;
+    }
 }

@@ -6,17 +6,17 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.Arrays;
 
-public class PasswordConstraintValidator implements ConstraintValidator<ValidPassword, String> {
+public class PasswordValidator implements ConstraintValidator<Password, String> {
 
     @Override
-    public void initialize(ValidPassword constraintAnnotation) {
+    public void initialize(Password constraintAnnotation) {
     }
 
     @Override
     public boolean isValid(String password, ConstraintValidatorContext context) {
         //todo add MessageResolver
 
-        PasswordValidator validator = new PasswordValidator(Arrays.asList(
+        org.passay.PasswordValidator validator = new org.passay.PasswordValidator(Arrays.asList(
                 //at least one alphabetical character
                 new CharacterRule(EnglishCharacterData.Alphabetical, 1),
 

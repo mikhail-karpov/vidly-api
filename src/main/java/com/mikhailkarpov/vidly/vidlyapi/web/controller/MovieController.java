@@ -4,6 +4,7 @@ import com.mikhailkarpov.vidly.vidlyapi.service.MovieService;
 import com.mikhailkarpov.vidly.vidlyapi.web.dto.MovieDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -46,6 +47,7 @@ public class MovieController {
     }
 
     @PostMapping
+    @Secured("ROLE_ADMIN")
     public ResponseEntity<Object> create(@Valid @RequestBody MovieDto movieDto) {
         log.debug("Request for creating new movie: {}", movieDto);
         MovieDto responseBody = movieService.create(movieDto);
@@ -68,6 +70,7 @@ public class MovieController {
     }
 
     @DeleteMapping("{id}")
+    @Secured("ROLE_ADMIN")
     public ResponseEntity<Object> delete(@PathVariable Long id) {
         log.debug("Request for deleting movie with id {}", id);
         movieService.deleteById(id);
