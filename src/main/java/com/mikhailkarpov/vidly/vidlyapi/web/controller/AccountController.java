@@ -1,11 +1,10 @@
 package com.mikhailkarpov.vidly.vidlyapi.web.controller;
 
+import com.mikhailkarpov.vidly.vidlyapi.domain.entity.UserRole;
+import com.mikhailkarpov.vidly.vidlyapi.exception.MyBadRequestException;
 import com.mikhailkarpov.vidly.vidlyapi.security.JwtService;
 import com.mikhailkarpov.vidly.vidlyapi.service.UserService;
-import com.mikhailkarpov.vidly.vidlyapi.web.dto.ApiError;
-import com.mikhailkarpov.vidly.vidlyapi.web.dto.AuthenticationRequest;
-import com.mikhailkarpov.vidly.vidlyapi.web.dto.AuthenticationResponse;
-import com.mikhailkarpov.vidly.vidlyapi.web.dto.RegistrationRequest;
+import com.mikhailkarpov.vidly.vidlyapi.web.dto.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.Collections;
 
 @RestController
 @RequestMapping("account")
@@ -37,45 +37,45 @@ public class AccountController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Object> register(@Valid @RequestBody RegistrationRequest request) {
+    public AuthenticationResponse register(@Valid @RequestBody UserRegistrationRequest request) {
         log.debug("Request for registering new user: {}", request);
 
         String email = request.getEmail();
         String password = request.getPassword();
-        String matchingPassword = request.getMatchingPassword();
 
-        if (!password.equals(matchingPassword)) {
-            ApiError error = new ApiError("Passwords don't match");
-            return ResponseEntity.badRequest().body(error);
-        }
+        UserDto user = UserDto.builder()
+                .email(email)
+                .password(password)
+                .matchingPassword(request.getMatchingPassword())
+                .roles(Collections.singletonList(UserRole.USER))
+                .build();
 
-        userService.register(email, password);
+        UserDto created = userService.create(user);
+        String jwt = authenticateInternal(email, password);
 
-        return authenticateInternal(email, password);
+        return new AuthenticationResponse(jwt, created);
     }
 
     @PostMapping("/auth")
-    public ResponseEntity<Object> authenticate(@Valid @RequestBody AuthenticationRequest request) {
+    public AuthenticationResponse authenticate(@Valid @RequestBody AuthenticationRequest request) {
         log.debug("Request for authentication: {}", request);
 
         String email = request.getEmail();
         String password = request.getPassword();
 
-        return authenticateInternal(email, password);
+        String jwt = authenticateInternal(email, password);
+        UserDto user = userService.findByEmail(email);
+
+        return new AuthenticationResponse(jwt, user);
     }
 
-    private ResponseEntity<Object> authenticateInternal(String username, String password) {
+    private String authenticateInternal(String username, String password) {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-            AuthenticationResponse response = new AuthenticationResponse(jwtService.generateToken(username), username);
-            return ResponseEntity.ok(response);
+            return jwtService.generateToken(username);
 
         } catch (AuthenticationException e) {
-            log.warn("Authentication exception: " + e.getMessage());
-
-            HttpStatus status = HttpStatus.BAD_REQUEST;
-            ApiError errorDto = new ApiError("Invalid email or password", e);
-            return ResponseEntity.status(status).body(errorDto);
+            throw new MyBadRequestException("Invalid email or password");
         }
     }
 }

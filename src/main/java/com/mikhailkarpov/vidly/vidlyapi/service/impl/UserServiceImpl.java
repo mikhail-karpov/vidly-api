@@ -1,49 +1,58 @@
 package com.mikhailkarpov.vidly.vidlyapi.service.impl;
 
 import com.mikhailkarpov.vidly.vidlyapi.domain.entity.UserEntity;
-import com.mikhailkarpov.vidly.vidlyapi.domain.entity.UserRoleEntity;
+import com.mikhailkarpov.vidly.vidlyapi.domain.entity.UserRole;
 import com.mikhailkarpov.vidly.vidlyapi.domain.repo.UserRepository;
-import com.mikhailkarpov.vidly.vidlyapi.domain.repo.UserRoleRepository;
-import com.mikhailkarpov.vidly.vidlyapi.exception.UserAlreadyExistsException;
+import com.mikhailkarpov.vidly.vidlyapi.exception.MyBadRequestException;
+import com.mikhailkarpov.vidly.vidlyapi.exception.UserNotFoundException;
 import com.mikhailkarpov.vidly.vidlyapi.service.UserService;
 import com.mikhailkarpov.vidly.vidlyapi.web.dto.UserDto;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.*;
 
-import static com.mikhailkarpov.vidly.vidlyapi.domain.entity.UserRoleEntity.DEFAULT_ROLE;
-
 @Service
 @Transactional
+@Slf4j
 public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
-    private UserRoleRepository userRoleRepository;
     private PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository,
-                           UserRoleRepository userRoleRepository,
-                           PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
-        this.userRoleRepository = userRoleRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
     @Override
-    public UserDto register(String email, String password) throws UserAlreadyExistsException {
-        if (userRepository.existsUserByEmail(email))
-            throw new UserAlreadyExistsException();
+    public UserDto create(UserDto userDto) {
+        String password = userDto.getPassword();
+        String matchingPassword = userDto.getMatchingPassword();
 
+        if (!password.equals(matchingPassword))
+            throw new MyBadRequestException("Passwords don't match");
+
+        String email = userDto.getEmail();
         String encodedPassword = passwordEncoder.encode(password);
-        UserRoleEntity roleEntity = userRoleRepository
-                .findByName(DEFAULT_ROLE)
-                .orElse(new UserRoleEntity(DEFAULT_ROLE));
+        Set<UserRole> roles = new HashSet<>(userDto.getRoles());
 
-        UserEntity userEntity = new UserEntity(email, encodedPassword, Collections.singleton(roleEntity));
+        UserEntity user = userRepository.save(new UserEntity(email, encodedPassword, roles));
+        log.info("User created: {}", user);
 
-        return UserDto.fromEntity(userRepository.save(userEntity));
+        return UserDto.fromEntity(user);
+    }
+
+    @Override
+    public void delete(Long userId) {
+        UserEntity user = userRepository
+                .findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(userId));
+
+        userRepository.delete(user);
+        log.info("User with id {} deleted", userId);
     }
 
     @Override
@@ -55,7 +64,30 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<UserDto> findByEmail(String email) {
-        return userRepository.findByEmail(email).map(UserDto::fromEntity);
+    public UserDto findByEmail(String email) {
+        UserEntity userEntity = userRepository
+                .findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User not found with email " + email));
+        return UserDto.fromEntity(userEntity);
+    }
+
+    @Override
+    public UserDto findById(Long userId) {
+        return userRepository
+                .findById(userId)
+                .map(UserDto::fromEntity)
+                .orElseThrow(() -> new UserNotFoundException(userId));
+    }
+
+    @Override
+    public UserDto update(UserDto userDto) {
+        Long userId = userDto.getId();
+        UserEntity user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+
+        user.setEmail(userDto.getEmail());
+        user.setRoles(new HashSet<>(userDto.getRoles()));
+
+        log.info("User updated: {}", user);
+        return userDto;
     }
 }

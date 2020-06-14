@@ -1,16 +1,16 @@
 package com.mikhailkarpov.vidly.vidlyapi.web.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class AuthenticationResponse {
 
     private String jwt;
-    private String email;
+    private UserDto user;
 
+    public AuthenticationResponse(String jwt, UserDto user) {
+        this.jwt = jwt;
+        this.user = user;
+    }
 }

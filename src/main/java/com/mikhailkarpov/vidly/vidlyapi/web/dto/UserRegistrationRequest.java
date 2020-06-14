@@ -8,7 +8,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
 @Data
-public class RegistrationRequest {
+public class UserRegistrationRequest {
 
     @Email(message = "Email is required")
     @NotEmpty(message = "Email is required")

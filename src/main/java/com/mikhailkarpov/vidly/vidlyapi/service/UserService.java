@@ -1,16 +1,22 @@
 package com.mikhailkarpov.vidly.vidlyapi.service;
 
+import com.mikhailkarpov.vidly.vidlyapi.domain.entity.UserRole;
 import com.mikhailkarpov.vidly.vidlyapi.web.dto.UserDto;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Set;
 
 public interface UserService {
 
-    UserDto register(String email, String password);
+    UserDto create(UserDto userDto);
+
+    void delete(Long userId);
 
     List<UserDto> findAll();
 
-    Optional<UserDto> findByEmail(String email);
+    UserDto findByEmail(String email);
 
+    UserDto findById(Long userId);
+
+    UserDto update(UserDto userDto);
 }
